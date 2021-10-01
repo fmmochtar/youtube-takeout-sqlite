@@ -17,5 +17,7 @@ pip3 install -r requirements.txt
 2. Copy your watch-history.json here.
 3. Run the main.py script.
 
+Additional : use pyenv or miniconda to automatically set up python environment  
+
 ## Bugs
 Probably there are. You tell me.
