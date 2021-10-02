@@ -1,12 +1,14 @@
 import json
 import sqlite3
+from datetime import datetime
 
 import generate_sqlite
 import logging as log
 
 # write your file path here
 file_input = "watch-history.json"
-file_sqlitedb = "history.db"
+date = datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
+file_sqlitedb = f"history_{date}.db"
 
 file_data = open(file_input, 'r', encoding="UTF8").read()
 history = json.loads(file_data, encoding="UTF8")
