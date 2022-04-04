@@ -2,3 +2,4 @@ datetime
 re
 json
 sqlite3
+sqlalchemy

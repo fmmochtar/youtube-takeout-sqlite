@@ -1,14 +1,20 @@
 import json
+import os
 import sqlite3
 from datetime import datetime
+#from dotenv import load_dotenv
 
 import generate_sqlite
+import generate_sqlalchemy
 import logging as log
+
+# SQL backend (sqlalchemy/sqlite3)
+sql_backend_env = os.getenv('SQL_BACKEND')
 
 # write your file path here
 file_input = "watch-history.json"
-date = datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
-file_sqlitedb = f"history_{date}.db"
+date = datetime.now().strftime("%Y%m%d_%H%M%S")
+file_sqlitedb = f"yt_history_{date}.db"
 
 file_data = open(file_input, 'r', encoding="UTF8").read()
 history = json.loads(file_data, encoding="UTF8")
@@ -30,9 +36,17 @@ if c.fetchone()[0]==1 :
     conn.close()
 else:
     log.warning("Table doesn't exist. Creating data ...")
-    conn.commit()
-    conn.close()
-    generate_sqlite.generate(file_input, file_sqlitedb)
+    # conn.commit()
+    # conn.close()
+    if sql_backend_env == "sqlalchemy":
+        print("Information: \nSQL backend: SQLAlchemy")
+        generate_sqlalchemy.generate(file_input, file_sqlitedb)
+    elif sql_backend_env == "sqlite3" or "sqlite":
+        print("Information: \nSQL backend: SQLite3")
+        generate_sqlite.generate(file_input, file_sqlitedb)
+    else:
+        print("Information: \nSQL backend: SQLite3")
+        generate_sqlite.generate(file_input, file_sqlitedb)
 
 
     
