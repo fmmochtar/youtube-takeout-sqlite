@@ -47,7 +47,11 @@ class generate:
             #time_reformat = re.sub(r'[Z]','', videos['time'])
             #videos_newtime = datetime.timestamp(datetime.fromisoformat(time_reformat).strftime("%Y-%m-%d %H:%M:%S"))
             
-            videos_newtime = datetime.strptime(videos['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
+            # time parsing
+            try:
+                videos_newtime = datetime.strptime(videos['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
+            except:
+                videos_newtime = datetime.strptime(videos['time'], "%Y-%m-%dT%H:%M:%SZ")
             #print(videos_newtime)
 
             if videos['title'] == "Visited YouTube Music":
