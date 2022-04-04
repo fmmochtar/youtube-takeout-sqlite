@@ -25,13 +25,13 @@ class generate:
 
         videos_history = db.Table('videos', metadata,
               db.Column('Id', db.Integer, primary_key=True, autoincrement=True),
+              db.Column('timestamp', db.DateTime),
               db.Column('title', db.String(255)),
               db.Column('url', db.String(255)),
               db.Column('channel', db.String(255)),
               db.Column('channel_url', db.String(255)),
-              db.Column('timestamp', db.DateTime),
-              db.Column('is_shorts', db.Boolean),
-              db.Column('is_music', db.Boolean)
+              # db.Column('is_shorts', db.Boolean),
+              db.Column('is_music', db.Boolean),
               )
         
         metadata.create_all(engine)
@@ -42,6 +42,7 @@ class generate:
         count = 1
         
         for videos in history:
+            service = videos['header']
             title = videos['title']
             title_new = title.lstrip('Watched').lstrip()
             #time_reformat = re.sub(r'[Z]','', videos['time'])
@@ -53,6 +54,11 @@ class generate:
             except:
                 videos_newtime = datetime.strptime(videos['time'], "%Y-%m-%dT%H:%M:%SZ")
             #print(videos_newtime)
+
+            if service == "YouTube Music":
+                is_music = True
+            else:
+                is_music = False
 
             if videos['title'] == "Visited YouTube Music":
                 print (f"Processed: {count}/{totalcount} : Visited YouTube Music data skipped.")
@@ -78,7 +84,7 @@ class generate:
                 channel_info = videos['subtitles'][0]
 
                 add_record = videos_history.insert().values(
-                        title=title_new, url=videos['titleUrl'], channel=channel_info['name'], channel_url=channel_info['url'], timestamp=videos_newtime)
+                        title=title_new, url=videos['titleUrl'], channel=channel_info['name'], channel_url=channel_info['url'], timestamp=videos_newtime, is_music=is_music)
                 result = connection.execute(add_record)
                 x = x - 1
                 print (f"Processed: {count}/{totalcount} : {title_new}\r", end="")

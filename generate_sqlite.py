@@ -26,6 +26,7 @@ class generate:
         count = 1
         
         for videos in history:
+            service = videos['header']
             title = videos['title']
             #title_new = title[7:].lstrip()
             title_new = title.lstrip('Watched').lstrip()
@@ -37,7 +38,12 @@ class generate:
                 videos_newtime = datetime.strptime(videos['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
             except:
                 videos_newtime = datetime.strptime(videos['time'], "%Y-%m-%dT%H:%M:%SZ")
-                
+            
+            if service == "YouTube Music":
+                is_music = True
+            else:
+                is_music = False
+
             #print(videos_newtime)
 
             if videos['title'] == "Visited YouTube Music":
